@@ -9,7 +9,6 @@ services:
     volumes:
       - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
-    
   node-red:
     image: nodered/node-red
     container_name: node-red
@@ -20,7 +19,6 @@ services:
     links:
       - "mqtt:mqtt"
       - "mongo:mongo"
-
   mongo:
     image: mongo
     container_name: mongo
@@ -34,7 +32,6 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodb:/data/db
-
   mongo-express:
     image: mongo-express:1.0.0-20
     restart: always
@@ -46,6 +43,5 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-
-  volumes:
+volumes:
     mongodb:
