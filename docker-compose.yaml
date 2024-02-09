@@ -1,4 +1,6 @@
+version: '2'
 services:
+
   mqtt:
     image: eclipse-mosquitto
     restart: always
@@ -6,40 +8,45 @@ services:
     ports:
       - "1883:1883"
     volumes:
-      - ./mosquitto/config:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/config:/mosquitto/config
       - ./mosquitto/data:/mosquitto/data
+    
   node-red:
     image: nodered/node-red
     container_name: node-red
     volumes:
-      - ./data:/data
+      - ./data:/data:rw
     ports:
       - "1880:1880"
     links:
-      - "mqtt:mqtt"
-      - "mongo:mongo"
+      - mqtt
+      - mongo
+
   mongo:
     image: mongo
     container_name: mongo
     restart: always
     ports:
-     - '27017:27017'
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: mqtt
     volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodb:/data/db
+
   mongo-express:
     image: mongo-express:1.0.0-20
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
       - mongo
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
 volumes:
-    mongodb:
+  mongodb:
