@@ -1,6 +1,5 @@
-version: '3'
+version: '2'
 services:
-
   mqtt:
     image: eclipse-mosquitto
     restart: always
@@ -19,15 +18,15 @@ services:
     ports:
       - "1880:1880"
     links:
-      - "mqtt:mqtt"
-      - "mongo:mongo"
+      - mqtt
+      - mongo
 
   mongo:
     image: mongo
     container_name: mongo
     restart: always
     ports:
-     - '27017:27017'
+      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -40,7 +39,7 @@ services:
     image: mongo-express:1.0.0-20
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
       - mongo
     environment:
