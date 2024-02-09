@@ -12,7 +12,7 @@ services:
     image: nodered/node-red
     container_name: node-red
     volumes:
-      - ./data:/data:rw
+      - ./data:/data
     ports:
       - "1880:1880"
     links:
@@ -29,7 +29,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: mqtt
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongodb:/data/db
   mongo-express:
     image: mongo-express:1.0.0-20
