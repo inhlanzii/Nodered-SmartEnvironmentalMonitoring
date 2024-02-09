@@ -1,0 +1,388 @@
+
+
+#Generating kubernetes YAML file for the Service mqtt.yml
+#This is Service Configuration Kube definition
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: service.name.4
+  namespace: default
+spec:
+  ports:
+  - name: nameme_01
+    port: 1883
+    protocol: tcp
+    targetPort: 1883
+  selector:
+    app: demo.82
+  type: NodePort
+
+#This is Pod Configuration Kube definition
+---
+kind: Pod
+metadata:
+  labels:
+    app: demo.82
+  namespace: default
+spec:
+  containers:
+  - image: eclipse-mosquitto
+    imagePullPolicy: IfNotPresent
+    name: mqtt
+    ports:
+    - containerPort: 1883
+      name: portname.0
+      protocol: tcp
+    volumeMounts:
+    - mountPath: /mosquitto/config
+      name: pvo.0
+    - mountPath: /mosquitto/data
+      name: pvo.1
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - name: pvo.0
+    persistentVolumeClaim:
+      claimName: claimname.0
+  - name: pvo.1
+    persistentVolumeClaim:
+      claimName: claimname.1
+
+#This is PersistentVolume Kube Object with Name
+#pvo.0.yml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: pvo.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: ./mosquitto/config
+    type: Directory
+  persistentVolumeReclaimPolicy: Retain
+
+#This is PersistentVolume Kube Object with Name
+#pvo.1.yml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: pvo.1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: ./mosquitto/data
+    type: Directory
+  persistentVolumeReclaimPolicy: Retain
+
+#This is PersistentVolumeClaim Kube Object with Name
+#claimname.0.yml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: claimname.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvo.0
+
+#This is PersistentVolumeClaim Kube Object with Name
+#claimname.1.yml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: claimname.1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvo.1
+
+#Generating kubernetes YAML file for the Service node-red.yml
+#This is Service Configuration Kube definition
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: service.name.8
+  namespace: default
+spec:
+  ports:
+  - name: nameme_01
+    port: 1880
+    protocol: tcp
+    targetPort: 1880
+  selector:
+    app: demo.63
+  type: NodePort
+
+#This is Pod Configuration Kube definition
+---
+kind: Pod
+metadata:
+  labels:
+    app: demo.63
+  namespace: default
+spec:
+  containers:
+  - image: nodered/node-red
+    imagePullPolicy: IfNotPresent
+    name: node-red
+    ports:
+    - containerPort: 1880
+      name: portname.0
+      protocol: tcp
+    volumeMounts:
+    - mountPath: /data
+      name: pvo.0
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - name: pvo.0
+    persistentVolumeClaim:
+      claimName: claimname.0
+
+#This is PersistentVolume Kube Object with Name
+#pvo.0.yml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: pvo.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: ./data
+    type: Directory
+  persistentVolumeReclaimPolicy: Retain
+
+#This is PersistentVolumeClaim Kube Object with Name
+#claimname.0.yml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: claimname.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvo.0
+
+#Generating kubernetes YAML file for the Service mongo.yml
+#This is Service Configuration Kube definition
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: service.name.5
+  namespace: default
+spec:
+  ports:
+  - name: nameme_01
+    port: 27017
+    protocol: tcp
+    targetPort: 27017
+  selector:
+    app: demo.98
+  type: NodePort
+
+#This is Pod Configuration Kube definition
+---
+kind: Pod
+metadata:
+  labels:
+    app: demo.98
+  namespace: default
+spec:
+  containers:
+  - env:
+    - name: MONGO_INITDB_ROOT_USERNAME
+      value: root
+    - name: MONGO_INITDB_ROOT_PASSWORD
+      value: example
+    - name: MONGO_INITDB_DATABASE
+      value: mqtt
+    image: mongo
+    imagePullPolicy: IfNotPresent
+    name: mongo
+    ports:
+    - containerPort: 27017
+      name: portname.0
+      protocol: tcp
+    volumeMounts:
+    - mountPath: /docker-entrypoint-initdb.d/mongo-init.js
+      name: pvo.0
+      readOnly: true
+    - mountPath: /data/db
+      name: pvo.1
+  terminationGracePeriodSeconds: 0
+  volumes:
+  - name: pvo.0
+    persistentVolumeClaim:
+      claimName: claimname.0
+  - name: pvo.1
+    persistentVolumeClaim:
+      claimName: claimname.1
+
+#This is PersistentVolume Kube Object with Name
+#pvo.0.yml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: pvo.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadOnlyMany
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: ./mongo-init.js
+    type: Directory
+  persistentVolumeReclaimPolicy: Retain
+
+#This is PersistentVolume Kube Object with Name
+#pvo.1.yml
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: pvo.1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  hostPath:
+    path: mongodb
+    type: Directory
+  persistentVolumeReclaimPolicy: Retain
+
+#This is PersistentVolumeClaim Kube Object with Name
+#claimname.0.yml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: claimname.0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvo.0
+
+#This is PersistentVolumeClaim Kube Object with Name
+#claimname.1.yml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: claimname.1
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvo.1
+
+#Generating kubernetes YAML file for the Service mongo-express.yml
+#This is Service Configuration Kube definition
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    generated.by: 8gwifi.org
+  name: service.name.6
+  namespace: default
+spec:
+  ports:
+  - name: nameme_01
+    port: 8081
+    protocol: tcp
+    targetPort: 8081
+  selector:
+    app: demo.58
+  type: NodePort
+
+#This is Pod Configuration Kube definition
+---
+kind: Pod
+metadata:
+  labels:
+    app: demo.58
+  namespace: default
+spec:
+  containers:
+  - env:
+    - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+      value: root
+    - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+      value: example
+    - name: ME_CONFIG_MONGODB_URL
+      value: mongodb://root:example@mongo:27017/
+    image: mongo-express:1.0.0-20
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 8081
+      name: portname.0
+      protocol: tcp
+  terminationGracePeriodSeconds: 0
